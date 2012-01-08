@@ -84,6 +84,7 @@ $(function(){
       var newVal = (Math.round(params['val'] * raiseTo) + Math.round((params['step'] || 1) * raiseTo)) / raiseTo;
 
       if (params['max'] !== undefined && newVal > params['max']) newVal = params['max'];
+      if (params['min'] !== undefined && newVal < params['min']) newVal = params['min'];
       newVal = matchStep(newVal, params['min'], params['max'], params['step']);
 
       $(elem).val(newVal);
@@ -95,6 +96,7 @@ $(function(){
       var newVal = (Math.round(params['val'] * raiseTo) - Math.round((params['step'] || 1) * raiseTo)) / raiseTo;
 
       if (params['min'] !== undefined && newVal < params['min']) newVal = params['min'];
+      if (params['max'] !== undefined && newVal > params['max']) newVal = params['max'];
       newVal = matchStep(newVal, params['min'], params['max'], params['step']);
 
       $(elem).val(newVal);
@@ -117,13 +119,23 @@ $(function(){
       $(btnContainer).addClass('number-spin-btn-container');
       $(btnContainer).insertAfter(elem);
 
+      var orgVal = elem.value;
       $(elem).bind({
 	DOMMouseScroll: function(event) {
-	  if (event.detail < 0) {
-	    increment(this);
+	  if (event.originalEvent !== undefined) {
+	    if (event.originalEvent.detail < 0) {
+	      increment(this);
+	    } else {
+	      decrement(this);
+	    }
 	  } else {
-	    decrement(this);
+	    if (event.detail < 0) {
+	      increment(this);
+	    } else {
+	      decrement(this);
+	    }
 	  }
+	  orgVal = this.value;
           event.preventDefault();
 	},
 	mousewheel: function(event) {
@@ -132,35 +144,47 @@ $(function(){
 	  } else {
 	    decrement(this);
 	  }
+	  orgVal = this.value;
           event.preventDefault();
 	},
 	keypress: function(event) {
 	  if (event.keyCode == 38) { // up arrow
 	    increment(this);
+	    orgVal = this.value;
 	  } else if (event.keyCode == 40) { // down arrow
 	    decrement(this);
-	  } else if (([8, 35, 36, 37, 39].indexOf(event.keyCode) == -1) &&
-		     ([45, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57].indexOf(event.which) == -1)) {
-	    event.preventDefault();
+	    orgVal = this.value;
 	  }
+	},
+	"input": function(event) {
+	  var val = this.value;
+	  if (val !== "" && !/^-?\d*(?:\.\d*)?$/.test(val)) {
+	    this.value = orgVal;
+	    return;
+	  }
+	  orgVal = val;
 	},
 	change: function(event) {
           if (event.originalEvent !== undefined) {
-	    var params = getParams(this);
+	    if (this.value !== "") {
+	      var params = getParams(this);
+	      var newVal = clipValues(params['val'], params['min'], params['max']);
+	      newVal = matchStep(newVal, params['min'], params['max'], params['step'], params['stepDecimal']);
 
-	    newVal = clipValues(params['val'], params['min'], params['max']);
-	    newVal = matchStep(newVal, params['min'], params['max'], params['step'], params['stepDecimal']);
-
-	    $(this).val(newVal);
+	      $(this).val(newVal);
+	    }
+      orgVal = this.value;
 	  }
 	}
       });
       $(upBtn).bind({
 	mousedown: function(event) {
 	  increment(elem);
+	  orgVal = elem.value;
 	  
 	  var timeoutFunc = function(elem, incFunc) {
 	    incFunc(elem);
+	    orgVal = elem.value;
 
 	    elem.timeoutID = window.setTimeout(timeoutFunc, 10, elem, incFunc);
 	  };
@@ -180,9 +204,11 @@ $(function(){
       $(downBtn).bind({
 	mousedown: function(event) {
 	  decrement(elem);
+	  orgVal = elem.value;
 	  
 	  var timeoutFunc = function(elem, decFunc) {
 	    decFunc(elem);
+	    orgVal = elem.value;
 
 	    elem.timeoutID = window.setTimeout(timeoutFunc, 10, elem, decFunc);
 	  };
