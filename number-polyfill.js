@@ -147,7 +147,7 @@ $(function(){
 	  orgVal = this.value;
           event.preventDefault();
 	},
-	keypress: function(event) {
+	keydown: function(event) {
 	  if (event.keyCode == 38) { // up arrow
 	    increment(this);
 	    orgVal = this.value;
