@@ -8,7 +8,7 @@
     <script src="uu-number-polyfill.js"></script>
     <script>
 uu.ready(function (uu) {
-  uu("input[type]").bind("change,input", function (evt) {
+  uu("input[type=number]").bind("change,input", function (evt) {
     uu("#input_num").text(evt.node.value);
   });
 });
