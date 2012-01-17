@@ -128,16 +128,19 @@ uu.ready(function(uu){
           } else {
             decrement(event.node);
           }
+          uu.event.fire(elem, "input");
           orgVal = event.node.value;
           event.preventDefault();
         }
       ).bind(
-        "keypress", function(event) {
+        "keydown", function(event) {
           if (event.keyCode == 38) { // up arrow
             increment(event.node);
+            uu.event.fire(elem, "input");
             orgVal = event.node.value;
           } else if (event.keyCode == 40) { // down arrow
             decrement(event.node);
+            uu.event.fire(elem, "input");
             orgVal = event.node.value;
           }
         }
@@ -165,6 +168,7 @@ uu.ready(function(uu){
       uu(upBtn).bind(
         "mousedown", function(event) {
           increment(elem);
+          uu.event.fire(elem, "input");
           orgVal = elem.value;
           
           var timeoutFunc = function(elem, incFunc) {
@@ -175,6 +179,7 @@ uu.ready(function(uu){
           };
           
           var releaseFunc = function(event) {
+            uu.event.fire(elem, "input");
             window.clearTimeout(elem.timeoutID);
             uu(document).unbind('mouseup', releaseFunc);
             uu(upBtn).unbind('mouseleave', releaseFunc);
@@ -189,6 +194,7 @@ uu.ready(function(uu){
       uu(downBtn).bind(
         "mousedown", function(event) {
           decrement(elem);
+          uu.event.fire(elem, "input");
           orgVal = elem.value;
           
           var timeoutFunc = function(elem, decFunc) {
@@ -199,6 +205,7 @@ uu.ready(function(uu){
           };
           
           var releaseFunc = function(event) {
+            uu.event.fire(elem, "input");
             window.clearTimeout(elem.timeoutID);
             uu(document).unbind('mouseup', releaseFunc);
             uu(downBtn).unbind('mouseleave', releaseFunc);
