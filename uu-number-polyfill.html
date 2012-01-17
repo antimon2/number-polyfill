@@ -6,9 +6,17 @@
     <link rel="stylesheet" type="text/css" href="number-polyfill.css" />
     <script src="http://uupaa-js.googlecode.com/svn/trunk/0.8/src/uupaa.js"></script>
     <script src="uu-number-polyfill.js"></script>
+    <script>
+uu.ready(function (uu) {
+  uu("input[type]").bind("change,input", function (evt) {
+    uu("#input_num").text(evt.node.value);
+  });
+});
+    </script>
   </head>
   <body>
 <form id="form-demo">
+<div>input number: <span id="input_num"></span></div>
 <table>
 <tr>
 <td>Number, plain:</td>

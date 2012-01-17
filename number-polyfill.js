@@ -135,6 +135,7 @@ $(function(){
 	      decrement(this);
 	    }
 	  }
+	  $(this).trigger("input");
 	  orgVal = this.value;
           event.preventDefault();
 	},
@@ -144,15 +145,18 @@ $(function(){
 	  } else {
 	    decrement(this);
 	  }
+	  $(this).trigger("input");
 	  orgVal = this.value;
           event.preventDefault();
 	},
 	keydown: function(event) {
 	  if (event.keyCode == 38) { // up arrow
 	    increment(this);
+	    $(this).trigger("input");
 	    orgVal = this.value;
 	  } else if (event.keyCode == 40) { // down arrow
 	    decrement(this);
+	    $(this).trigger("input");
 	    orgVal = this.value;
 	  }
 	},
@@ -180,6 +184,7 @@ $(function(){
       $(upBtn).bind({
 	mousedown: function(event) {
 	  increment(elem);
+	  $(elem).trigger("input");
 	  orgVal = elem.value;
 	  
 	  var timeoutFunc = function(elem, incFunc) {
@@ -190,6 +195,7 @@ $(function(){
 	  };
 	  
 	  var releaseFunc = function(event) {
+	    $(elem).trigger("input");
 	    window.clearTimeout(elem.timeoutID);
 	    $(document).unbind('mouseup', releaseFunc);
 	    $(upBtn).unbind('mouseleave', releaseFunc);
@@ -204,6 +210,7 @@ $(function(){
       $(downBtn).bind({
 	mousedown: function(event) {
 	  decrement(elem);
+	  $(elem).trigger("input");
 	  orgVal = elem.value;
 	  
 	  var timeoutFunc = function(elem, decFunc) {
@@ -214,6 +221,7 @@ $(function(){
 	  };
 	  
 	  var releaseFunc = function(event) {
+	    $(elem).trigger("input");
 	    window.clearTimeout(elem.timeoutID);
 	    $(document).unbind('mouseup', releaseFunc);
 	    $(downBtn).unbind('mouseleave', releaseFunc);

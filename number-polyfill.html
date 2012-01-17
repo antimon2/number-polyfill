@@ -7,9 +7,17 @@
     <script src="http://code.jquery.com/jquery.min.js"></script>
     <script src="http://www.modernizr.com/downloads/modernizr-latest.js"></script>
     <script src="number-polyfill.js"></script>
+    <script>
+$(function(){
+  $("input[type=number]").bind("change input", function (evt) {
+    $("#input_num").text(this.value);
+  });
+});
+    </script>
   </head>
   <body>
 <form id="form-demo">
+<div>input number: <span id="input_num"></span></div>
 <table>
 <tr>
 <td>Number, plain:</td>
